@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PL-7001 Warm-Up Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #742774;
+    --purple-light: #a94ca9;
+    --purple-dark: #4a1750;
+    --teal: #0d8585;
+    --bg: #faf8f5;
+    --card: #ffffff;
+    --text: #2a2a2a;
+    --text-muted: #6b6b6b;
+    --border: #e8e4df;
+    --green: #2d8a4e;
+    --green-bg: #e6f4ea;
+    --red: #c0392b;
+    --red-bg: #fdeaea;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .page { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+  header {
+    background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 50%, var(--purple-light) 100%);
+    color: white;
+    padding: 40px 36px 32px;
+    border-radius: 16px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  header .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+  header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  header p { font-size: 15px; opacity: 0.8; }
+  header .theia {
+    text-decoration: none;
+    color: white;
+    text-align: right;
+    flex-shrink: 0;
+    margin-left: 24px;
+  }
+  header .theia div:first-child {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+  header .theia div:nth-child(2) { font-size: 10px; opacity: 0.7; letter-spacing: 1.5px; }
+  header .theia div:nth-child(3) { font-size: 9px; opacity: 0.5; margin-top: 2px; }
+
+  /* Score bar */
+  .score-bar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .score-bar .label { font-weight: 700; font-size: 15px; }
+  .score-bar .progress-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .score-bar .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--purple-light));
+    border-radius: 5px;
+    width: 0%;
+    transition: width 0.6s ease;
+  }
+  .score-bar .score-text {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--purple);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+  }
+  .question-card.correct { border-color: var(--green); }
+  .question-card.wrong { border-color: var(--red); }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    width: 34px; height: 34px;
+    background: var(--purple);
+    color: white;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .q-module {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--purple-light);
+    background: #f5eef5;
+    padding: 3px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+  }
+  .q-text {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--purple-light);
+    background: #faf5fa;
+  }
+  .option .letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: #f2f0ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option.selected { border-color: var(--purple); background: #faf5fa; }
+  .option.selected .letter { background: var(--purple); color: white; }
+  .option.is-correct {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+  .option.is-correct .letter { background: var(--green); color: white; }
+  .option.is-wrong {
+    border-color: var(--red);
+    background: var(--red-bg);
+  }
+  .option.is-wrong .letter { background: var(--red); color: white; }
+  .option.disabled { cursor: default; opacity: 0.7; }
+  .option.is-correct.disabled, .option.is-wrong.disabled { opacity: 1; }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: var(--green-bg); color: var(--green); }
+  .feedback.wrong-fb { background: var(--red-bg); color: var(--red); }
+  .feedback strong { font-weight: 700; }
+
+  /* Reset */
+  .reset-btn {
+    display: block;
+    margin: 32px auto 0;
+    padding: 14px 36px;
+    background: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .reset-btn:hover { background: var(--purple-dark); }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  footer a { color: var(--purple); text-decoration: none; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 26px; }
+    .question-card { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="top-row">
+      <div>
+        <div class="badge">PL-7001 · Warm-Up Quiz</div>
+        <h1>Wie viel weisst du<br>noch von gestern?</h1>
+        <p>5 Fragen zu Module 1–3 · Multiple Choice</p>
+      </div>
+      <a href="https://theiasolutions.ch" target="_blank" class="theia">
+        <div>THEIA</div>
+        <div>SOLUTIONS AG</div>
+        <div>theiasolutions.ch</div>
+      </a>
+    </div>
+  </header>
+
+  <div class="score-bar">
+    <span class="label">Fortschritt</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="score-text" id="scoreText">0 / 5</span>
+  </div>
+
+  <div id="quiz"></div>
+
+  <button class="reset-btn" id="resetBtn" style="display:none;" onclick="resetQuiz()">🔄 Nochmal versuchen</button>
+
+  <footer>
+    <span>PL-7001 · Create and manage canvas apps with Power Apps</span>
+    <span><a href="https://theiasolutions.ch" target="_blank">Theia Solutions AG</a> · 2026</span>
+  </footer>
+
+</div>
+
+<script>
+const questions = [
+  {
+    module: "Modul 1",
+    text: "Power Apps Studio hat drei Hauptbereiche (Panes). Welche Kombination ist korrekt?",
+    options: [
+      "Navigation, Canvas, Eigenschaften (Properties)",
+      "Dashboard, Editor, Terminal",
+      "Ribbon, Toolbox, Output",
+      "Explorer, Timeline, Console"
+    ],
+    correct: 0,
+    explanation: "Power Apps Studio besteht aus dem linken Navigationsbereich (Tree View), dem mittleren Canvas-Bereich und dem rechten Eigenschaften-Panel (Properties Pane)."
+  },
+  {
+    module: "Modul 2",
+    text: "Welcher der folgenden Punkte ist KEIN Vorteil von Microsoft Dataverse?",
+    options: [
+      "Rollenbasierte Sicherheit für Tabellenzugriff",
+      "Direkte Integration mit Dynamics 365 Daten",
+      "Kostenlose unbegrenzte Speicherkapazität",
+      "Berechnete Spalten, Business Rules und Workflows"
+    ],
+    correct: 2,
+    explanation: "Dataverse bietet viele Vorteile, aber keinen kostenlosen unbegrenzten Speicher. Speicher ist lizenz- und kapazitätsabhängig."
+  },
+  {
+    module: "Modul 2",
+    text: "Du erstellst eine Dataverse-Tabelle. Was ist die «Primary Column» (Primärspalte)?",
+    options: [
+      "Ein automatisch generierter numerischer Schlüssel (Auto-ID)",
+      "Eine Textspalte, die den Anzeigenamen des Datensatzes enthält",
+      "Die erste Spalte, die vom Benutzer erstellt wird",
+      "Ein GUID-Feld, das als eindeutiger Bezeichner dient"
+    ],
+    correct: 1,
+    explanation: "Jede Dataverse-Tabelle hat eine Primary Name Column — eine einzeilige Textspalte, die in Lookups und Formularen als Anzeigename verwendet wird."
+  },
+  {
+    module: "Modul 3",
+    text: "Du willst ein Control in deiner Canvas App nur unter bestimmten Bedingungen anzeigen. Welche Eigenschaft verwendest du?",
+    options: [
+      "DisplayMode",
+      "OnSelect",
+      "Visible",
+      "Default"
+    ],
+    correct: 2,
+    explanation: "Die Eigenschaft «Visible» steuert, ob ein Control angezeigt oder ausgeblendet wird. Du kannst sie mit einer Formel wie Visible = If(Condition, true, false) konfigurieren."
+  },
+  {
+    module: "Modul 3",
+    text: "Was ist der Hauptunterschied zwischen einem Gallery-Control und einem Form-Control?",
+    options: [
+      "Galleries zeigen Bilder, Forms zeigen nur Text",
+      "Galleries zeigen eine Liste von Datensätzen, Forms zeigen Details eines einzelnen Datensatzes",
+      "Galleries sind nur für Dataverse, Forms funktionieren mit allen Quellen",
+      "Galleries sind schreibgeschützt, Forms können nicht angepasst werden"
+    ],
+    correct: 1,
+    explanation: "Eine Gallery zeigt mehrere Datensätze in einer Liste an, während ein Form die Details eines einzelnen Datensatzes anzeigt und bearbeiten lässt."
+  }
+];
+
+let answered = 0;
+let score = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quiz');
+  container.innerHTML = '';
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = 'q' + qi;
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${qi + 1}</div>
+        <div class="q-module">${q.module}</div>
+      </div>
+      <div class="q-text">${q.text}</div>
+      <div class="options">
+        ${q.options.map((opt, oi) => `
+          <div class="option" data-q="${qi}" data-o="${oi}" onclick="selectAnswer(${qi}, ${oi})">
+            <div class="letter">${String.fromCharCode(65 + oi)}</div>
+            <div>${opt}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="feedback" id="fb${qi}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qi, oi) {
+  const card = document.getElementById('q' + qi);
+  if (card.classList.contains('correct') || card.classList.contains('wrong')) return;
+
+  const options = card.querySelectorAll('.option');
+  const fb = document.getElementById('fb' + qi);
+  const q = questions[qi];
+  const isCorrect = oi === q.correct;
+
+  options.forEach(o => o.classList.add('disabled'));
+
+  if (isCorrect) {
+    options[oi].classList.add('is-correct');
+    card.classList.add('correct');
+    fb.className = 'feedback show correct-fb';
+    fb.innerHTML = `<strong>✓ Richtig!</strong> ${q.explanation}`;
+    score++;
+  } else {
+    options[oi].classList.add('is-wrong');
+    options[q.correct].classList.add('is-correct');
+    card.classList.add('wrong');
+    fb.className = 'feedback show wrong-fb';
+    fb.innerHTML = `<strong>✗ Leider falsch.</strong> ${q.explanation}`;
+  }
+
+  answered++;
+  document.getElementById('scoreText').textContent = score + ' / 5';
+  document.getElementById('progressFill').style.width = (answered / 5 * 100) + '%';
+
+  if (answered === 5) {
+    document.getElementById('resetBtn').style.display = 'block';
+  }
+}
+
+function resetQuiz() {
+  answered = 0;
+  score = 0;
+  document.getElementById('scoreText').textContent = '0 / 5';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('resetBtn').style.display = 'none';
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
